@@ -84,7 +84,7 @@ const Testimonials = () => {
             <span className="text-primary">dizem</span>
           </h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            A satisfação dos nossos clientes é a nossa maior conquista
+            A satisfação dos nossos clientes é a nossa maior conquista.
           </p>
         </div>
 
