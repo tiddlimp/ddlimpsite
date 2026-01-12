@@ -139,6 +139,8 @@ const Footer = () => {
                 <a 
                   key={index}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all"
                   aria-label={social.label}
                 >
