@@ -11,12 +11,29 @@
     <meta property="og:title" content="Grupo DDLIMP - Soluções Empresariais" />
     <meta property="og:description" content="Soluções completas para sua empresa com qualidade e eficiência" />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/logoGrupoddlimp.png" />
+    <meta property="og:url" content="https://grupoddlimp.com.br" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Grupo DDLIMP - Soluções Empresariais" />
+    <meta name="twitter:description" content="Soluções completas para sua empresa com qualidade e eficiência" />
+    <meta name="twitter:image" content="/images/logoGrupoddlimp.png" />
     <title>Grupo DDLIMP - Soluções Empresariais</title>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    
+    <!-- Google Analytics - Consent Mode -->
     <script>
+      // Configura o modo de consentimento padrão (negado até aceitar)
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      
+      // Define consentimento padrão como negado
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied'
+      });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
       gtag('js', new Date());
       gtag('config', 'GA_MEASUREMENT_ID');
     </script>

@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header/Header'
 import Footer from './components/Footer/Footer'
 import WhatsAppButton from './components/WhatsAppButton/WhatsAppButton'
+import CookieConsent from './components/CookieConsent/CookieConsent'
 import Home from './pages/Home/Home'
 import PrivacyPolicy from './pages/Legal/PrivacyPolicy'
 import TermsOfUse from './pages/Legal/TermsOfUse'
@@ -21,6 +22,7 @@ function App() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <CookieConsent />
     </div>
   )
 }
