@@ -32,9 +32,9 @@ const WorkWithUs = () => {
     setFileError('')
     
     if (file) {
-      // Verificar tamanho (máximo 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setFileError('O arquivo deve ter no máximo 10MB')
+      // Verificar tamanho (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setFileError('O arquivo deve ter no máximo 5MB')
         setSelectedFile(null)
         return
       }
@@ -275,7 +275,7 @@ const WorkWithUs = () => {
                     <>
                       <FaCloudUploadAlt className="text-4xl text-gray-400 mx-auto mb-3" />
                       <p className="text-gray-600 font-medium">Clique para selecionar ou arraste seu currículo</p>
-                      <p className="text-gray-400 text-sm mt-1">PDF ou Word (máx. 10MB)</p>
+                      <p className="text-gray-400 text-sm mt-1">PDF ou Word (máx. 5MB)</p>
                     </>
                   )}
                 </div>
@@ -327,6 +327,6 @@ const WorkWithUs = () => {
       </div>
     </main>
   )
-
+}
 
 export default WorkWithUs
