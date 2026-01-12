@@ -165,8 +165,8 @@ const Footer = () => {
               <Link to="/termos-de-uso" className="text-gray-500 hover:text-primary-light transition-colors">
                 Termos de Uso
               </Link>
-              <Link to="/lgpd" className="text-gray-500 hover:text-primary-light transition-colors">
-                LGPD
+              <Link to="/trabalhe-conosco" className="text-gray-500 hover:text-primary-light transition-colors">
+                Trabalhe Conosco
               </Link>
             </div>
 

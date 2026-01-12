@@ -5,7 +5,7 @@ import WhatsAppButton from './components/WhatsAppButton/WhatsAppButton'
 import Home from './pages/Home/Home'
 import PrivacyPolicy from './pages/Legal/PrivacyPolicy'
 import TermsOfUse from './pages/Legal/TermsOfUse'
-import LGPD from './pages/Legal/LGPD'
+import WorkWithUs from './pages/Careers/WorkWithUs'
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/politica-de-privacidade" element={<PrivacyPolicy />} />
           <Route path="/termos-de-uso" element={<TermsOfUse />} />
-          <Route path="/lgpd" element={<LGPD />} />
+          <Route path="/trabalhe-conosco" element={<WorkWithUs />} />
         </Routes>
       </main>
       <Footer />
