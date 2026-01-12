@@ -71,63 +71,61 @@ const WorkWithUs = () => {
     }
 
     try {
-      // Converter arquivo para base64
-      const reader = new FileReader()
+      // 1. Upload do arquivo para tmpfiles.org (suporta CORS, gratuito, links válidos por 1 hora)
+      const fileFormData = new FormData()
+      fileFormData.append('file', selectedFile)
       
-      reader.onload = async () => {
-        try {
-          const base64File = reader.result
-          const fileSize = (selectedFile.size / 1024 / 1024).toFixed(2)
-          
-          // Enviar email com o arquivo em base64
-          const templateParams = {
-            from_name: formData.name,
-            from_email: formData.email,
-            phone: formData.phone,
-            position: formData.position || 'Não especificado',
-            message: formData.message || 'Nenhuma mensagem adicional',
-            file_name: selectedFile.name,
-            file_size: `${fileSize} MB`,
-            file_type: selectedFile.type,
-            file_data: base64File
-          }
+      const uploadResponse = await fetch('https://tmpfiles.org/api/v1/upload', {
+        method: 'POST',
+        body: fileFormData
+      })
+      
+      const uploadResult = await uploadResponse.json()
+      
+      if (uploadResult.status !== 'success') {
+        throw new Error('Erro no upload do arquivo')
+      }
+      
+      // Converter URL de visualização para URL de download direto
+      const viewUrl = uploadResult.data.url
+      const downloadUrl = viewUrl.replace('tmpfiles.org/', 'tmpfiles.org/dl/')
+      
+      // 2. Enviar email com o link do arquivo via EmailJS
+      const fileSize = (selectedFile.size / 1024 / 1024).toFixed(2)
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        position: formData.position || 'Não especificado',
+        message: formData.message || 'Nenhuma mensagem adicional',
+        file_name: selectedFile.name,
+        file_size: `${fileSize} MB`,
+        file_link: downloadUrl
+      }
 
-          await emailjs.send(
-            'service_ng48ypm',
-            'template_lg5amm3',
-            templateParams,
-            'UceFglZtaI-8aLY2i'
-          )
-          
-          setIsSubmitting(false)
-          setSubmitted(true)
-          setFormData({ name: '', email: '', phone: '', position: '', message: '' })
-          setSelectedFile(null)
-          if (fileInputRef.current) {
-            fileInputRef.current.value = ''
-          }
-          
-          setTimeout(() => setSubmitted(false), 5000)
-        } catch (err) {
-          console.error('Erro ao enviar:', err)
-          setIsSubmitting(false)
-          setError(true)
-          setTimeout(() => setError(false), 8000)
-        }
+      await emailjs.send(
+        'service_ng48ypm',
+        'template_lg5amm3',
+        templateParams,
+        'UceFglZtaI-8aLY2i'
+      )
+      
+      setIsSubmitting(false)
+      setSubmitted(true)
+      setFormData({ name: '', email: '', phone: '', position: '', message: '' })
+      setSelectedFile(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
       }
       
-      reader.onerror = () => {
-        setIsSubmitting(false)
-        setError(true)
-        setTimeout(() => setError(false), 8000)
-      }
-      
-      reader.readAsDataURL(selectedFile)
+      setTimeout(() => setSubmitted(false), 5000)
     } catch (err) {
-      console.error('Erro ao processar arquivo:', err)
+      console.error('Erro ao enviar:', err)
       setIsSubmitting(false)
       setError(true)
       setTimeout(() => setError(false), 8000)
+    }
+  }
     }
   }
 
