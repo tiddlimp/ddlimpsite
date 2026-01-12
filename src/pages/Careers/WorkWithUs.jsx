@@ -126,8 +126,6 @@ const WorkWithUs = () => {
       setTimeout(() => setError(false), 8000)
     }
   }
-    }
-  }
 
   const positions = [
     'Motorista',
@@ -329,6 +327,6 @@ const WorkWithUs = () => {
       </div>
     </main>
   )
-}
+
 
 export default WorkWithUs
