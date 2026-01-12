@@ -71,22 +71,32 @@ const WorkWithUs = () => {
     }
 
     try {
-      // 1. Fazer upload do arquivo para File.io (serviço gratuito)
+      // 1. Obter servidor disponível do GoFile
+      const serverResponse = await fetch('https://api.gofile.io/servers')
+      const serverData = await serverResponse.json()
+      
+      if (serverData.status !== 'ok') {
+        throw new Error('Erro ao obter servidor de upload')
+      }
+      
+      const server = serverData.data.servers[0].name
+      
+      // 2. Fazer upload do arquivo para GoFile
       const fileFormData = new FormData()
       fileFormData.append('file', selectedFile)
       
-      const uploadResponse = await fetch('https://file.io', {
+      const uploadResponse = await fetch(`https://${server}.gofile.io/contents/uploadfile`, {
         method: 'POST',
         body: fileFormData
       })
       
       const uploadResult = await uploadResponse.json()
       
-      if (!uploadResult.success) {
+      if (uploadResult.status !== 'ok') {
         throw new Error('Erro no upload do arquivo')
       }
       
-      // 2. Enviar email com o link do arquivo
+      // 3. Enviar email com o link do arquivo
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
@@ -94,7 +104,7 @@ const WorkWithUs = () => {
         position: formData.position || 'Não especificado',
         message: formData.message || 'Nenhuma mensagem adicional',
         file_name: selectedFile.name,
-        file_link: uploadResult.link
+        file_link: uploadResult.data.downloadPage
       }
 
       await emailjs.send(
