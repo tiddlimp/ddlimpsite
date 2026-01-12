@@ -32,9 +32,9 @@ const WorkWithUs = () => {
     setFileError('')
     
     if (file) {
-      // Verificar tamanho (máximo 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setFileError('O arquivo deve ter no máximo 5MB')
+      // Verificar tamanho (máximo 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setFileError('O arquivo deve ter no máximo 10MB')
         setSelectedFile(null)
         return
       }
@@ -62,6 +62,7 @@ const WorkWithUs = () => {
     e.preventDefault()
     setIsSubmitting(true)
     setError(false)
+    setFileError('')
     
     if (!selectedFile) {
       setFileError('Por favor, anexe seu currículo')
@@ -70,59 +71,53 @@ const WorkWithUs = () => {
     }
 
     try {
-      // Converter arquivo para base64
-      const reader = new FileReader()
-      reader.readAsDataURL(selectedFile)
+      // 1. Fazer upload do arquivo para File.io (serviço gratuito)
+      const fileFormData = new FormData()
+      fileFormData.append('file', selectedFile)
       
-      reader.onload = async () => {
-        const base64File = reader.result
-        
-        // Preparar dados para envio
-        const templateParams = {
-          from_name: formData.name,
-          from_email: formData.email,
-          phone: formData.phone,
-          position: formData.position || 'Não especificado',
-          message: formData.message,
-          file_name: selectedFile.name,
-          file_content: base64File
-        }
-
-        try {
-          await emailjs.send(
-            'service_ng48ypm',
-            'template_lg5amm3', // Você precisará criar este template no EmailJS
-            templateParams,
-            'UceFglZtaI-8aLY2i'
-          )
-          
-          setIsSubmitting(false)
-          setSubmitted(true)
-          setFormData({ name: '', email: '', phone: '', position: '', message: '' })
-          setSelectedFile(null)
-          if (fileInputRef.current) {
-            fileInputRef.current.value = ''
-          }
-          
-          setTimeout(() => setSubmitted(false), 5000)
-        } catch (err) {
-          console.error('Erro ao enviar:', err)
-          setIsSubmitting(false)
-          setError(true)
-          setTimeout(() => setError(false), 5000)
-        }
+      const uploadResponse = await fetch('https://file.io', {
+        method: 'POST',
+        body: fileFormData
+      })
+      
+      const uploadResult = await uploadResponse.json()
+      
+      if (!uploadResult.success) {
+        throw new Error('Erro no upload do arquivo')
+      }
+      
+      // 2. Enviar email com o link do arquivo
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        position: formData.position || 'Não especificado',
+        message: formData.message || 'Nenhuma mensagem adicional',
+        file_name: selectedFile.name,
+        file_link: uploadResult.link
       }
 
-      reader.onerror = () => {
-        setIsSubmitting(false)
-        setError(true)
-        setTimeout(() => setError(false), 5000)
+      await emailjs.send(
+        'service_ng48ypm',
+        'template_lg5amm3',
+        templateParams,
+        'UceFglZtaI-8aLY2i'
+      )
+      
+      setIsSubmitting(false)
+      setSubmitted(true)
+      setFormData({ name: '', email: '', phone: '', position: '', message: '' })
+      setSelectedFile(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
       }
+      
+      setTimeout(() => setSubmitted(false), 5000)
     } catch (err) {
-      console.error('Erro ao processar arquivo:', err)
+      console.error('Erro ao enviar:', err)
       setIsSubmitting(false)
       setError(true)
-      setTimeout(() => setError(false), 5000)
+      setTimeout(() => setError(false), 8000)
     }
   }
 
@@ -171,7 +166,7 @@ const WorkWithUs = () => {
                 <span className="text-2xl">✕</span>
                 <div>
                   <p className="font-semibold">Erro ao enviar currículo</p>
-                  <p className="text-sm">Tente novamente ou envie diretamente para orcamento@bgpg.com.br</p>
+                  <p className="text-sm">Tente novamente ou envie diretamente para <a href="mailto:orcamento@bgpg.com.br" className="underline font-medium">orcamento@bgpg.com.br</a></p>
                 </div>
               </div>
             )}
@@ -182,9 +177,9 @@ const WorkWithUs = () => {
                   <label className="block text-gray-700 font-medium mb-2">Nome Completo *</label>
                   <input
                     type="text"
-                    name="name"
+                    name="from_name"
                     value={formData.name}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                     placeholder="Seu nome completo"
@@ -194,9 +189,9 @@ const WorkWithUs = () => {
                   <label className="block text-gray-700 font-medium mb-2">E-mail *</label>
                   <input
                     type="email"
-                    name="email"
+                    name="from_email"
                     value={formData.email}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                     placeholder="seu@email.com"
@@ -211,7 +206,7 @@ const WorkWithUs = () => {
                     type="tel"
                     name="phone"
                     value={formData.phone}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     required
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                     placeholder="(00) 00000-0000"
@@ -222,7 +217,7 @@ const WorkWithUs = () => {
                   <select
                     name="position"
                     value={formData.position}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-white"
                   >
                     <option value="">Selecione uma área</option>
@@ -245,6 +240,7 @@ const WorkWithUs = () => {
                   <input
                     ref={fileInputRef}
                     type="file"
+                    name="attachment"
                     accept=".pdf,.doc,.docx"
                     onChange={handleFileChange}
                     className="hidden"
@@ -273,7 +269,7 @@ const WorkWithUs = () => {
                     <>
                       <FaCloudUploadAlt className="text-4xl text-gray-400 mx-auto mb-3" />
                       <p className="text-gray-600 font-medium">Clique para selecionar ou arraste seu currículo</p>
-                      <p className="text-gray-400 text-sm mt-1">PDF ou Word (máx. 5MB)</p>
+                      <p className="text-gray-400 text-sm mt-1">PDF ou Word (máx. 10MB)</p>
                     </>
                   )}
                 </div>
@@ -287,7 +283,7 @@ const WorkWithUs = () => {
                 <textarea
                   name="message"
                   value={formData.message}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   rows="4"
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
                   placeholder="Conte um pouco sobre você, suas experiências e por que gostaria de trabalhar conosco..."
