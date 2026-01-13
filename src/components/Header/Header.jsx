@@ -41,6 +41,7 @@ const Header = () => {
     { label: 'Serviços', id: 'servicos', action: () => scrollToSection('servicos') },
     { label: 'Portfólio', id: 'portfolio', action: () => scrollToSection('portfolio') },
     { label: 'Contato', id: 'contato', action: () => scrollToSection('contato') },
+    { label: 'Trabalhe conosco', id: 'trabalhe-conosco', action: () => window.location.href = '/trabalhe-conosco' },
   ]
 
   return (

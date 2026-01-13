@@ -10,7 +10,7 @@ const Differentials = () => {
     {
       icon: FaShieldAlt,
       title: 'Segurança Garantida',
-      description: 'Equipamentos certificados e manutenção rigorosa para sua total segurança.',
+      description: ' certificados e manutenção rigorosa para sua total segurança.',
     },
     {
       icon: FaTruck,

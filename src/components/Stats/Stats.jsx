@@ -9,7 +9,7 @@ const Stats = () => {
     { icon: FaCalendarAlt, value: 30, suffix: '+', label: 'Anos de Experiência' },
     { icon: FaBuilding, value: 5, suffix: '', label: 'Empresas no Grupo' },
     { icon: FaUsers, value: 1000, suffix: '+', label: 'Clientes Atendidos' },
-    { icon: FaTruck, value: 50, suffix: '+', label: 'Equipamentos' },
+    { icon: FaTruck, value: 50, suffix: '+', label: 'Veículos na Frota' },
   ]
 
   useEffect(() => {
