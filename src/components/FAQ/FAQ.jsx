@@ -27,7 +27,7 @@ const FAQ = () => {
     },
     {
       question: 'Qual a área de atendimento?',
-      answer: 'Atendemos todo o Litoral Sul. Nossa frota própria de caminhões nos permite atender diversas localidades da região. Consulte-nos para verificar a disponibilidade para sua cidade.'
+      answer: 'Atendemos a Baixada Santista.'
     },
   ]
 
