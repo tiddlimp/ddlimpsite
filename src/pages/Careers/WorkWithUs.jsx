@@ -71,24 +71,23 @@ const WorkWithUs = () => {
     }
 
     try {
-      // 1. Upload do arquivo para tmpfiles.org (suporta CORS, gratuito, links válidos por 1 hora)
+      // 1. Upload do arquivo para GoFile (arquivos ficam disponíveis por vários dias)
       const fileFormData = new FormData()
       fileFormData.append('file', selectedFile)
       
-      const uploadResponse = await fetch('https://tmpfiles.org/api/v1/upload', {
+      const uploadResponse = await fetch('https://store1.gofile.io/contents/uploadfile', {
         method: 'POST',
         body: fileFormData
       })
       
       const uploadResult = await uploadResponse.json()
       
-      if (uploadResult.status !== 'success') {
+      if (uploadResult.status !== 'ok') {
         throw new Error('Erro no upload do arquivo')
       }
       
-      // Converter URL de visualização para URL de download direto
-      const viewUrl = uploadResult.data.url
-      const downloadUrl = viewUrl.replace('tmpfiles.org/', 'tmpfiles.org/dl/')
+      // URL de download do GoFile
+      const downloadUrl = uploadResult.data.downloadPage
       
       // 2. Enviar email com o link do arquivo via EmailJS
       const fileSize = (selectedFile.size / 1024 / 1024).toFixed(2)
